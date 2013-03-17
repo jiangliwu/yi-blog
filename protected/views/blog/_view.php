@@ -20,4 +20,9 @@
 	<b><?php echo CHtml::encode($data->getAttributeLabel('blog_length')); ?>:</b>
 	<?php echo CHtml::encode($data->blog_length); ?>
 	<br />
+	
+	<b>评论条数 :</b>
+	<?php $commentDate = Comment::model()->findAllByAttributes(array('comment_blog_id'=>$data->blog_id));
+		echo count($commentDate);
+	?>
 </div>

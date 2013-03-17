@@ -49,7 +49,6 @@ class Blog extends CActiveRecord
 			array('blog_title', 'length', 'max'=>255),
 			array('tags', 'safe'),
 			
-			array('tags', 'match', 'pattern'=>'/^[\w\s,]+$/','message'=>'Tags can only contain word characters.'), //只能为字母和逗号
 			array('blog_status', 'in', 'range'=>array(0,1,2,3)),		//只能为1,2,3
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.

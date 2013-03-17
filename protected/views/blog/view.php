@@ -14,6 +14,7 @@ array('label'=>'Update Blog', 'url'=>array('update', 'id'=>$model->blog_id)),
 array('label'=>'Delete Blog', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->blog_id),'confirm'=>'Are you sure you want to delete this item?')),
 array('label'=>'Manage Blog', 'url'=>array('admin')),
 );
+
 ?>
 
 <h1><a
@@ -23,14 +24,27 @@ array('label'=>'Manage Blog', 'url'=>array('admin')),
 <div><b>作者 :</b><?php 
 $tmpUser = User::model()->findByAttributes(array('user_id'=>$model->blog_user_id));
 echo $tmpUser->user_nickname;
-?> <b>创作时间 :</b> <?php echo $model->blog_create_time?> <br>
+?> <br><b>创作时间 :</b> <?php echo $model->blog_create_time?> <br>
+<b>修改时间 :</b> <?php echo $model->blog_create_time?> <br>
 <br>
 
-<?php echo CHtml::encode($model->blog_text)?></div>
+<?php echo ($model->blog_text)?></div>
 
 
 
 <br>
+<a href=""></a>
+<?php 
+// tag 处理
+$tags = preg_split('/[,]+/', $model->tags);
+
+foreach ($tags as $key){
+	
+	echo "<a href = \"".Yii::app()->createUrl('blog/tag', array('name'=>$key))."\" >".$key."</a>";	
+	echo " ";	
+}
+?>
+
 <br>
 <div><b>评论:</b> <br>
 <?php

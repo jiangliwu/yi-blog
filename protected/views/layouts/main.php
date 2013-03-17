@@ -31,9 +31,11 @@
 	<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/syntaxhighlighter_3.0.83/sh/scripts/shBrushSql.js"></script>
 	<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/syntaxhighlighter_3.0.83/sh/scripts/shBrushVb.js"></script>
 	<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/syntaxhighlighter_3.0.83/sh/scripts/shBrushXml.js"></script>
-	
 	<link type="text/css" rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
 	<script type="text/javascript">SyntaxHighlighter.all();</script>
+	 
+	 
+	 
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 	
 	

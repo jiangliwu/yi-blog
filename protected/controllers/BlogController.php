@@ -28,7 +28,7 @@ class BlogController extends Controller
 	{
 		return array(
 		array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','comment'),
+				'actions'=>array('index','view','comment','tag'),
 				'users'=>array('*'),
 		),
 		array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -37,7 +37,7 @@ class BlogController extends Controller
 		),
 		array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
+				'users'=>array('jiangliwu'),
 		),
 		array('deny',  // deny all users
 				'users'=>array('*'),
@@ -53,8 +53,8 @@ class BlogController extends Controller
 	{
 		$commentModel = new Comment;
 		$blogModel = $this->loadModel($id);
-		Yii::getLogger()->log($blogModel->blog_text,'info','app.BlogController');
-		
+
+
 		$this->render('view',array(
 			'model'=>$blogModel,
 			'commentModel'=>$commentModel
@@ -77,14 +77,26 @@ class BlogController extends Controller
 			$model->attributes=$_POST['Blog'];
 			$model->blog_create_time = date('Y-m-d H:i:s');
 			$model->blog_modify_time = date('Y-m-d H:i:s');
+				
 			$tmpUser = User::model()->findByAttributes(array('user_name'=>Yii::app()->user->name));
 			$model->blog_user_id = $tmpUser->user_id;
-			
-			//这里去掉c++语言的 <的自动补全>
-			Yii::log($model->blog_text,'info','app.BlogController');
+			//tags 处理
+				
 			if($model->save())
-			$this->redirect(array('view','id'=>$model->blog_id));
-			
+			{
+				$tags = preg_split('/[,]+/', $model->tags);
+				array_unique($tags);			//去掉重复的
+				foreach ($tags as $key)
+				{
+					$tagModel = new Tag();
+					$tagModel->tag_text = $key;
+					$tagModel->blog_id = $model->blog_id;
+					$tagModel->save();
+				}
+				$this->redirect(array('view','id'=>$model->blog_id));
+
+			}
+
 		}
 
 		$this->render('create',array(
@@ -107,8 +119,11 @@ class BlogController extends Controller
 		if(isset($_POST['Blog']))
 		{
 			$model->attributes=$_POST['Blog'];
+			$model->blog_modify_time = date('Y-m-d H:i:s');
 			if($model->save())
-			$this->redirect(array('view','id'=>$model->blog_id));
+			{
+				$this->redirect(array('view','id'=>$model->blog_id));
+			}
 		}
 
 		$this->render('update',array(
@@ -135,7 +150,12 @@ class BlogController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Blog');
+		$dataProvider=new CActiveDataProvider('Blog',
+		array(
+			'sort'=>array(
+				'defaultOrder'=>'blog_create_time DESC',
+		),
+		));
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -194,10 +214,10 @@ class BlogController extends Controller
 	}
 
 
-	public static function fixCppCode($text)
+	public function  actionTag($name)
 	{
-		$ret = "";
-		return $ret;
+		$tags = Tag::model()->findAllByAttributes(array('tag_text'=>$name));
+		$this->render('tag',array('model'=>$tags,'name'=>$name));
 	}
 
 	//添加评论的action ,参数为blog的id
