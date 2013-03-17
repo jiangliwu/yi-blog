@@ -4,7 +4,7 @@
 
 $this->breadcrumbs=array(
 	'Blogs'=>array('index'),
-	$model->blog_title,
+$model->blog_title,
 );
 
 $this->menu=array(
@@ -26,7 +26,7 @@ echo $tmpUser->user_nickname;
 ?> <b>创作时间 :</b> <?php echo $model->blog_create_time?> <br>
 <br>
 
-<?php echo $model->blog_text?></div>
+<?php echo CHtml::encode($model->blog_text)?></div>
 
 
 
@@ -37,15 +37,11 @@ echo $tmpUser->user_nickname;
 
 $commentDate = Comment::model()->findAllByAttributes(array('comment_blog_id'=>$model->blog_id));
 foreach ($commentDate as $key) {
-	?>
-	<b>用户昵称 :</b> <?php echo $key->comment_author?> 
-	<b>时间 ： </b> 
-	<?php echo $key->comment_create_time?>
-	<br>
-	<?php echo $key->comment_text?>
-	<br>
-	<br>
-	<?php 
+	?> <b>用户昵称 :</b> <?php echo $key->comment_author?> <b>时间 ： </b> <?php echo $key->comment_create_time?>
+<br>
+	<?php echo $key->comment_text?> <br>
+<br>
+	<?php
 }
 
 ?></div>
@@ -95,7 +91,8 @@ function addComment()
                 else
                 {
                     $('#commentDialog div.divForForm').html(data.div);
-                    setTimeout(\"$('#commentDialog').dialog('close') \",1000);
+                    setTimeout(\"$('#commentDialog').dialog('close') \",100);
+                    history.go(0);			//刷新页面
                 }
             } ",
             ))
@@ -104,7 +101,6 @@ function addComment()
 }
 
 </script>
-<!--  -->
 
             <?php echo CHtml::link('留下你的评论', "",  // the link for open the dialog
             array(

@@ -16,7 +16,6 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
 	
 	
-	
 	<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
 	<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
 	<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>

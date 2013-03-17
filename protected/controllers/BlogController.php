@@ -52,8 +52,11 @@ class BlogController extends Controller
 	public function actionView($id)
 	{
 		$commentModel = new Comment;
+		$blogModel = $this->loadModel($id);
+		Yii::getLogger()->log($blogModel->blog_text,'info','app.BlogController');
+		
 		$this->render('view',array(
-			'model'=>$this->loadModel($id),
+			'model'=>$blogModel,
 			'commentModel'=>$commentModel
 		));
 	}
@@ -76,12 +79,12 @@ class BlogController extends Controller
 			$model->blog_modify_time = date('Y-m-d H:i:s');
 			$tmpUser = User::model()->findByAttributes(array('user_name'=>Yii::app()->user->name));
 			$model->blog_user_id = $tmpUser->user_id;
-			$model->blog_length = strlen($model->blog_text);
+			
 			//这里去掉c++语言的 <的自动补全>
-			
-			
+			Yii::log($model->blog_text,'info','app.BlogController');
 			if($model->save())
 			$this->redirect(array('view','id'=>$model->blog_id));
+			
 		}
 
 		$this->render('create',array(
@@ -191,7 +194,11 @@ class BlogController extends Controller
 	}
 
 
-
+	public static function fixCppCode($text)
+	{
+		$ret = "";
+		return $ret;
+	}
 
 	//添加评论的action ,参数为blog的id
 	public function actionComment($id)
@@ -204,23 +211,23 @@ class BlogController extends Controller
 			$model->comment_status = 0;
 			$model->comment_create_time = date('Y-m-d H:i:s');
 			$model->comment_blog_id = $id;
-			
+
 			if(!$model->save())
 			{
 				echo CJSON::encode(array(
                     'status'=>'success', 
                     'div'=>'评论失败!',
-                    ));
-                    exit;
+				));
+				exit;
 			}
-			
-			
+
+
 			if (Yii::app()->request->isAjaxRequest)
 			{
 
 				echo CJSON::encode(array(
                     'status'=>'success', 
-                    'div'=>"评论添加成功,对话框在1000毫秒后消失!"
+                    'div'=>"评论添加成功,对话框在100毫秒后消失!"
                     ));
                     exit;
 			}
@@ -233,10 +240,12 @@ class BlogController extends Controller
 			echo CJSON::encode(array(
                 'status'=>'failure', 
                 'div'=>$this->renderPartial('comment_form', array('model'=>$model), true)));
-				
+
 			exit;
 		}
 		else
-		$this->render('commentcreate',array('model'=>$model));
+		{
+			$this->render('commentcreate',array('model'=>$model));
+		}
 	}
 }
