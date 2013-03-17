@@ -8,16 +8,16 @@ class SiteController extends Controller
 	public function actions()
 	{
 		return array(
-			// captcha action renders the CAPTCHA image displayed on the contact page
+		// captcha action renders the CAPTCHA image displayed on the contact page
 			'captcha'=>array(
 				'class'=>'CCaptchaAction',
 				'backColor'=>0xFFFFFF,
-			),
-			// page action renders "static" pages stored under 'protected/views/site/pages'
-			// They can be accessed via: index.php?r=site/page&view=FileName
+		),
+		// page action renders "static" pages stored under 'protected/views/site/pages'
+		// They can be accessed via: index.php?r=site/page&view=FileName
 			'page'=>array(
 				'class'=>'CViewAction',
-			),
+		),
 		);
 	}
 
@@ -40,9 +40,9 @@ class SiteController extends Controller
 		if($error=Yii::app()->errorHandler->error)
 		{
 			if(Yii::app()->request->isAjaxRequest)
-				echo $error['message'];
+			echo $error['message'];
 			else
-				$this->render('error', $error);
+			$this->render('error', $error);
 		}
 	}
 
@@ -72,6 +72,8 @@ class SiteController extends Controller
 		$this->render('contact',array('model'=>$model));
 	}
 
+
+
 	/**
 	 * Displays the login page
 	 */
@@ -92,12 +94,11 @@ class SiteController extends Controller
 			$model->attributes=$_POST['LoginForm'];
 			// validate user input and redirect to the previous page if valid
 			if($model->validate() && $model->login())
-				$this->redirect(Yii::app()->user->returnUrl);
+			$this->redirect(Yii::app()->user->returnUrl);
 		}
 		// display the login form
 		$this->render('login',array('model'=>$model));
 	}
-
 	/**
 	 * Logs out the current user and redirect to homepage.
 	 */
@@ -105,5 +106,20 @@ class SiteController extends Controller
 	{
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
+	}
+
+	public function actionRegister()
+	{
+		$model = new User;
+		if(isset($_POST['User']))
+		{
+			$model->attributes = $_POST['User'];
+			if($model->save())
+			{
+				Yii::app()->user->setFlash('register',$model->user_name);
+				$this->refresh();
+			}
+		}
+		$this->render('register',array('model'=>$model));
 	}
 }
